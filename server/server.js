@@ -36,7 +36,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static uploaded product images from server/uploads
+// Serve static uploaded product and banner images from server/uploads
 const serverUploadsPath = path.join(__dirname, "uploads");
 if (!fs.existsSync(serverUploadsPath)) {
   fs.mkdirSync(serverUploadsPath, { recursive: true });
@@ -44,6 +44,10 @@ if (!fs.existsSync(serverUploadsPath)) {
 const productImagesDir = path.join(serverUploadsPath, "product-images");
 if (!fs.existsSync(productImagesDir)) {
   fs.mkdirSync(productImagesDir, { recursive: true });
+}
+const bannerImagesDir = path.join(serverUploadsPath, "banner-images");
+if (!fs.existsSync(bannerImagesDir)) {
+  fs.mkdirSync(bannerImagesDir, { recursive: true });
 }
 
 app.use("/uploads", (req, res, next) => {
@@ -60,6 +64,19 @@ if (fs.existsSync(rootUploadsPath)) {
     next();
   }, express.static(rootUploadsPath));
 }
+
+// Root route (API info & health check)
+app.get("/", (req, res) => {
+  res.json({
+    name: "Kheti Se Backend API",
+    status: "online",
+    health: "/api/health",
+    products: "/api/products",
+    banners: "/api/banners",
+    settings: "/api/settings",
+    timestamp: new Date()
+  });
+});
 
 // Health check
 app.get("/api/health", (req, res) => {
