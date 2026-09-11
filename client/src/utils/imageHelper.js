@@ -32,10 +32,11 @@ export function getImageUrl(imagePath) {
   // Ensure leading slash for uploaded static paths
   const cleanPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 
-  // Check if we have an explicit backend URL configured in env
-  const backendBase = import.meta.env.VITE_API_URL
-    ? import.meta.env.VITE_API_URL.replace(/\/$/, "")
-    : "";
+  // Check if we have an explicit backend URL configured in env, or fallback in production
+  const backendBase = (
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.PROD ? "https://khetise-hup3.onrender.com" : "")
+  ).replace(/\/$/, "");
 
   // If backend base URL is known, prefix it; otherwise return relative path (for proxy or same-origin)
   return backendBase ? `${backendBase}${cleanPath}` : cleanPath;

@@ -5,7 +5,11 @@ const getApiBaseUrl = () => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL.replace(/\/$/, "");
   }
-  // In dev / Vite proxy mode, relative path "/" sends requests to Vite proxy (/api -> :5000/api)
+  // In production builds (e.g. Vercel deployment), fallback to Render backend
+  if (import.meta.env.PROD) {
+    return "https://khetise-hup3.onrender.com";
+  }
+  // In dev / Vite proxy mode, relative path "" sends requests to Vite proxy (/api -> :5000/api)
   return "";
 };
 
